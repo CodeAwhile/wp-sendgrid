@@ -9,7 +9,7 @@ Extends the wp_mail() function to use the SendGrid API to send emails
 
 == Description ==
 
-WordPress relies on email for various notifications, such as new user messages and comments. Many plugins also use email to notify blog owners about various events. For anyone who develops in Windows, this is frustrating, because PHP can’t send emails by default.
+WordPress relies on email for various notifications, such as new user messages and comments. Many plugins also use email to notify blog owners about various events. For anyone who develops in Windows, this is frustrating, because PHP can't send emails by default.
 
 SendGrid is a service that lets you send emails through an API (among other things). WP SendGrid is a plugin that extends WordPress' wp_mail() function so that it sends emails through SendGrid's API. If you develop on Windows (or any other environment where you have trouble sending emails with WordPress), you're going to love WP SendGrid.
 
