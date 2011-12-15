@@ -20,3 +20,8 @@ To install, enable WP SendGrid like you would any other WordPress plugin. Enter 
 1. Upload the WP SendGrid to the /wp-contents/plugins/ folder.
 1. Activate the plugin from the 'Plugins' menu in WordPress.
 1. Configure WP SendGrid with your SendGrid API credentials. 
+
+== Changelog ==
+
+= 1.0 : 2011-12-15 =
+* Initial release
