@@ -6,6 +6,7 @@
  * Plugin URI: http://www.itsananderson.com/plugins/wp-sendgrid/
  * Author: Will Anderson
  * Author URI: http://www.itsananderson.com/
+ * License: GPLv2
  */
 
 class WP_SendGrid {
