@@ -7,7 +7,7 @@ Stable tag: 1.0
 
 Extends the wp_mail() function to use the SendGrid API to send emails
 
-=== Description ===
+== Description ==
 
 WordPress relies on email for various notifications, such as new user messages and comments. Many plugins also use email to notify blog owners about various events. For anyone who develops in Windows, this is frustrating, because PHP can’t send emails by default.
 
@@ -15,7 +15,7 @@ SendGrid is a service that lets you send emails through an API (among other thin
 
 To install, enable WP SendGrid like you would any other WordPress plugin. Enter your SendGrid credentials (you’ll need a SendGrid account), and you should be ready to go. If you wish, you can also choose between SendGrid’s REST API and their SMTP servers, and whether to connect to SendGrid using a secure connection.
 
-=== Installation ===
+== Installation ==
 
 1. Upload the WP SendGrid to the /wp-contents/plugins/ folder.
 1. Activate the plugin from the 'Plugins' menu in WordPress.
