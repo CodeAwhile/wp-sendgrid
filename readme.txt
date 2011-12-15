@@ -23,5 +23,5 @@ To install, enable WP SendGrid like you would any other WordPress plugin. Enter 
 
 == Changelog ==
 
-= 1.0 : 2011-12-15 =
+= 1.0 =
 * Initial release

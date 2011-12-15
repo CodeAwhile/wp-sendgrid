@@ -3,6 +3,7 @@
 /*
  * Plugin Name: WP SendGrid
  * Description: SendGrid integration for WordPress
+ * Version: 1.0
  * Plugin URI: http://www.itsananderson.com/plugins/wp-sendgrid/
  * Author: Will Anderson
  * Author URI: http://www.itsananderson.com/
