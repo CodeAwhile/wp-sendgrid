@@ -198,7 +198,8 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 		'api_user' => $options['username'],
 		'api_key' => $options['password'],
 		'files' => $attachment_array,
-		'from' => 'will@itsananderson.com'
+		'from' => $from_email,
+		'fromname' => $from_name,
 	);
 
 	if ( 'text/plain' !== $content_type ) {
