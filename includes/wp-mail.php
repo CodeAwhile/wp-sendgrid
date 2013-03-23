@@ -191,6 +191,7 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 		}
 	}
 
+
 	$args = array(
 		'to' => $to,
 		'subject' => $subject,
@@ -202,18 +203,21 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 		'fromname' => $from_name,
 	);
 
+	$xsmtpapi = apply_filters( 'wp_sendgrid_xsmtpapi', array(), $to, $subject, $message, $headers, $attachment_array );
+	if ( !empty( $xsmtpapi ) ) {
+		$args['x-smtpapi'] = json_encode( $xsmtpapi );
+	}
+
 	if ( 'text/plain' !== $content_type ) {
 		$args['html'] = $message;
 	}
 
+	$args = apply_filters( 'wp_sendgrid_args', $args, $to, $subject, $message, $headers, $attachment_array );
 
 	$response = json_decode( wp_remote_retrieve_body( wp_remote_post( 'https://sendgrid.com/api/mail.send.json', array( 'sslverify' => false, 'body' => $args ) ) ) );
 	if ( isset( $response->message ) && $response->message == 'success' ) {
 		return true;
-	} else {
-		return false;
 	}
 
-	return true;
-
+	return false;
 }
