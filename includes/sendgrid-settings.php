@@ -68,9 +68,13 @@ class WP_SendGrid_Settings {
 		<div class="wrap">
 			<h2><?php _e( 'WP SendGrid Settings' ); ?></h2>
 			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="POST">
+				<?php do_action( 'wp_sendgrid_settings_form_begin' ); ?>
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
 				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
+				<?php do_action( 'wp_sendgrid_settings_before_submit_button'); ?>
 				<?php submit_button(); ?>
+				<?php do_action( 'wp_sendgrid_settings_after_submit_button' ); ?>
+				<?php do_action( 'wp_sendgrid_settings_form_end' ); ?>
 			</form>
 		</div>
 		<?php
