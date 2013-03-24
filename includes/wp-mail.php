@@ -34,7 +34,7 @@
  * @return bool Whether the email contents were sent successfully.
  */
 function wp_mail( $to, $subject, $message, $headers = '', $attachments = array() ) {
-	$options = WP_SendGrid::get_options();
+	$options = WP_SendGrid_Settings::get_settings();
 	// Compact the input, apply the filters, and extract them back out
 	extract( apply_filters( 'wp_mail', compact( 'to', 'subject', 'message', 'headers', 'attachments' ) ) );
 
@@ -190,7 +190,6 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 			}
 		}
 	}
-
 
 	$args = array(
 		'to' => $to,
