@@ -3,7 +3,7 @@ Contributors: itsananderson
 Tags: email
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Extends the wp_mail() function to use the SendGrid API to send emails
 
@@ -22,6 +22,9 @@ To install, enable WP SendGrid like you would any other WordPress plugin. Enter 
 1. Configure WP SendGrid with your SendGrid API credentials. 
 
 == Changelog ==
+
+= 2.0.1 =
+* Fix a typo in wp_mail function definition
 
 = 2.0 =
 * Rewrote settings page using the Settings API
