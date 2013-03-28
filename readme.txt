@@ -1,5 +1,5 @@
 === WP SendGrid ===
-Contributors: itsananderson 
+Contributors: itsananderson, Zer0Divisor
 Tags: email
 Requires at least: 3.0
 Tested up to: 3.5.1
