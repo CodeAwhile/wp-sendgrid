@@ -15,10 +15,11 @@ class WP_SendGrid_Settings {
 	const API_SMTP = 'smtp';
 
 	private static $settings;
-	private static $default_settings = array( 	'username'	=> '',
-												'password'	=> '',
-												'api'			=> self::API_REST,
-												'secure'		=> false );
+	private static $default_settings = array( 
+		'username'	=> '',
+		'password'	=> '',
+		'api'			=> self::API_REST,
+		'secure'		=> false );
 
 	public static function start() {
 		add_action( 'admin_init',         array( __CLASS__, 'register_settings' ) );
