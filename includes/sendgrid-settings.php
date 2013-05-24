@@ -16,10 +16,11 @@ class WP_SendGrid_Settings {
 
 	private static $settings;
 	private static $default_settings = array( 
-		'username'	=> '',
-		'password'	=> '',
-		'api'			=> self::API_REST,
-		'secure'		=> false );
+			'username' => '',
+			'password' => '',
+			'api'      => self::API_REST,
+			'secure'   => false
+		);
 
 	public static function start() {
 		add_action( 'admin_init',         array( __CLASS__, 'register_settings' ) );
@@ -33,7 +34,7 @@ class WP_SendGrid_Settings {
 	}
 
 	public static function register_settings() {
-	$option_name = (WP_NETWORK_ADMIN == 1) ? self::SETTINGS_NETWORK_OPTION_NAME : self::SETTINGS_OPTION_NAME;
+	$option_name = ( self::is_network_admin_page() ) ? self::SETTINGS_NETWORK_OPTION_NAME : self::SETTINGS_OPTION_NAME;
 		// Register settings and sections
 		register_setting( self::SETTINGS_PAGE_SLUG, $option_name, array( __CLASS__, 'validate_settings' ) );
 		add_settings_section( self::SETTINGS_SECTION_ID, __( 'Account Settings' ), array( __CLASS__, 'show_settings_section_description' ), self::SETTINGS_PAGE_SLUG );
@@ -50,7 +51,7 @@ class WP_SendGrid_Settings {
 			'label' => 'Use a secure connection (recommended).'
 		) );
 
-		if (WP_NETWORK_ADMIN == 1) {
+		if ( self::is_network_admin_page() ) {
 			// Only add the override option if viewing the settings under network admin
 			self::add_settings_field( 'override', __('Allow Override'), 'checkbox', array(
 				'label' => __('Allow individual sites to override the network-level settings'),
@@ -61,7 +62,8 @@ class WP_SendGrid_Settings {
 
 	public static function register_menu() {
 		// Check to be sure the network settings allow for individual site override, before adding option page
-		if ( self::get_network_settings()['override'] ) {
+		$net_settings = self::get_network_settings();
+		if ( $net_settings['override'] ) {
 			add_options_page( __( 'SendGrid Settings' ), __( 'SendGrid Settings' ),
 				'manage_options', self::SETTINGS_PAGE_SLUG, array( __CLASS__, 'show_settings_page' ) );
 		}
@@ -92,7 +94,7 @@ class WP_SendGrid_Settings {
 
 	public static function show_settings_page() {
 		// Compose the url to post the form to.
-		$url = (WP_NETWORK_ADMIN != 1) ?  admin_url( 'options.php' ) : add_query_arg( 'action', 'update_sendgrid_network_options', network_admin_url('edit.php'));
+		$url = ( !self::is_network_admin_page() ) ?  admin_url( 'options.php' ) : add_query_arg( 'action', 'update_sendgrid_network_options', network_admin_url('edit.php'));
 		?>
 		<div class="wrap">
 			<h2><?php _e( 'WP SendGrid Settings' ); ?></h2>
@@ -179,11 +181,9 @@ class WP_SendGrid_Settings {
 
 		// First check the network settings.
 		$settings = self::get_network_settings();
-		if ($settings['override'] && WP_NETWORK_ADMIN != 1) {
+		if ( $settings['override'] && !self::is_network_admin_page() ) {
 			// Since the network options are undefined (or overrideable) get the normal settings.
-			$settings = get_option( self::SETTINGS_OPTION_NAME, array() );
-			// TODO: Should individual sites inherit settings from network even if override is allowed?
-			$settings = array_merge( self::get_default_settings(), $settings );
+			$settings = get_option( self::SETTINGS_OPTION_NAME, $settings );
 		}
 		
 		self::$settings = apply_filters( 'wp_sendgrid_get_settings', $settings );
@@ -195,19 +195,28 @@ class WP_SendGrid_Settings {
 		return array_merge(self::get_default_network_settings(), $settings);
 	}
 
+	private static function is_network_admin_page() {
+		return ( defined( 'WP_NETWORK_ADMIN' ) && WP_NETWORK_ADMIN == 1 );
+	}
+
 	public static function update_network_options() {
-		if ( $_POST ) {
-			// Only make changes if the 'wp_sendgrid_options' key exists.
-			if ( isset( $_POST['wp_sendgrid_options'] ) ) {
-				$value = stripslashes_deep( $_POST['wp_sendgrid_options'] );
+		// Only make changes if the self::SETTINGS_OPTION_NAME key exists.
+		//  Note: we use the SETTINGS_OPTION_NAME because it is used by files in the '/views' folder
+		if ( isset( $_REQUEST[self::SETTINGS_OPTION_NAME] ) ) {
+			$value = stripslashes_deep( $_REQUEST[self::SETTINGS_OPTION_NAME] );
+		
+			// Since a false value from the override checkbox won't be saved, we need to add it here.
+			$_REQUEST[self::SETTINGS_OPTION_NAME]['override'] = isset( $_REQUEST[self::SETTINGS_OPTION_NAME]['override'] );
 			
-				// Since a false value from the override checkbox won't be saved, we need to add it here.
-				$_POST['wp_sendgrid_options']['override'] = isset( $_POST['wp_sendgrid_options']['override'] );
-				// Update the network option.
-				update_site_option( self::SETTINGS_NETWORK_OPTION_NAME, $_POST['wp_sendgrid_options'] );
+			// Validate settings
+			self::validate_settings( $_REQUEST[self::SETTINGS_OPTION_NAME] );
 			
-				// TODO: Redirect back to the settings page.
-			}
+			// Update the network option.
+			update_site_option( self::SETTINGS_NETWORK_OPTION_NAME, $_REQUEST[self::SETTINGS_OPTION_NAME] );
+		
+			// Redirect back to the network settings page.
+			wp_redirect( add_query_arg( 'page', self::SETTINGS_PAGE_SLUG, network_admin_url('settings.php') ) );
+			exit();
 		}
 	}
 }
