@@ -77,7 +77,7 @@ class WP_SendGrid_Settings {
 	}
 
 	public static function queue_resources($screen) {
-		if ( 'settings_page_' . self::SETTINGS_PAGE_SLUG == $screen->base ) {
+		if ( 'settings_page_' . self::SETTINGS_PAGE_SLUG == $screen->base || 'settings_page_' . self::SETTINGS_PAGE_SLUG . '-network' == $screen->base ) {
 			wp_enqueue_script( 'wp-sendgrid', WP_SendGrid::plugin_url( 'resources/wp-sendgrid.js' ), array( 'jquery' ) );
 			wp_enqueue_style( 'wp-sendgrid', WP_SendGrid::plugin_url( 'resources/wp-sendgrid.css' ) );
 		}
