@@ -16,11 +16,11 @@ class WP_SendGrid_Settings {
 
 	private static $settings;
 	private static $default_settings = array( 
-			'username' => '',
-			'password' => '',
-			'api'      => self::API_REST,
-			'secure'   => false
-		);
+		'username' => '',
+		'password' => '',
+		'api'      => self::API_REST,
+		'secure'   => false
+	);
 
 	public static function start() {
 		add_action( 'admin_init',         array( __CLASS__, 'register_settings' ) );
@@ -207,7 +207,7 @@ class WP_SendGrid_Settings {
 		// First check the network settings.
 		$settings = self::get_network_settings();
 		if ( $settings['override'] && !self::is_network_admin_page() ) {
-			// Since the network options are undefined (or overrideable) get the normal settings.
+			// Since the network options are undefined (or overridable) get the normal settings.
 			$settings = get_option( self::SETTINGS_OPTION_NAME, $settings );
 			// Since unchecking checkboxes may remove keys from the option array, merge with the
 			// default settings to ensure all keys are defined.
