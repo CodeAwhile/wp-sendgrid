@@ -154,7 +154,7 @@ class WP_SendGrid_Settings {
 	}
 
 	public static function load_field_view( $view, $args ) {
-		$args['settings'] = self::get_settings();
+		$args['settings'] = self::is_network_admin_page() ? self::get_network_settings() : self::get_local_settings();
 		$args['value'] = $args['settings'][$args['id']];
 		WP_SendGrid::load_view( $view, $args );
 	}
@@ -206,21 +206,28 @@ class WP_SendGrid_Settings {
 
 		// First check the network settings.
 		$settings = self::get_network_settings();
-		if ( $settings['override'] && !self::is_network_admin_page() ) {
-			// Since the network options are undefined (or overridable) get the normal settings.
-			$settings = get_option( self::SETTINGS_OPTION_NAME, $settings );
-			// Since unchecking checkboxes may remove keys from the option array, merge with the
-			// default settings to ensure all keys are defined.
-			$settings = array_merge( self::$default_settings, $settings );
+
+		// If network settings are empty, or override is enabled, check local settings
+		if ( isset( $settings['override'] ) && $settings['override'] && !self::is_network_admin_page() ) {
+			$local_settings = self::get_local_settings();
+			if ( !empty( $local_settings ) ) {
+				$settings = array_merge( $settings, $local_settings );
+			}
 		}
 		
 		self::$settings = apply_filters( 'wp_sendgrid_get_settings', $settings );
 		return self::$settings;
 	}
 
+	private static function get_local_settings() {
+		$settings = array_merge( self::get_default_settings(), get_option( self::SETTINGS_OPTION_NAME, array() ) );
+		return apply_filters( 'wp_sendgrid_get_local_settings', $settings );
+	}
+
 	private static function get_network_settings() {
 		$settings = get_site_option( self::SETTINGS_NETWORK_OPTION_NAME, array());
-		return array_merge( self::get_default_network_settings(), $settings );
+		$settings = array_merge( self::get_default_network_settings(), $settings );
+		return apply_filters( 'wp_sendgrid_get_network_settings', $settings );
 	}
 
 	private static function is_network_admin_page() {
