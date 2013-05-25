@@ -98,7 +98,7 @@ class WP_SendGrid_Settings {
 			// Compose the network admin url to post to.
 			$url = add_query_arg( 'action', 'update_sendgrid_network_options', network_admin_url('edit.php'));
 
-			if ( isset( $_REQUEST['settings-updated'] ) ) {
+			if ( self::is_network_admin_page() && isset( $_REQUEST['settings-updated'] ) ) {
 				// If the request contains a 'settings-updated' parameter, we know we just saved the settings
 				// and need to display an 'updated' message along with the 'test' button.
 				// We can't call 'validate_settings' then 'settings_errors' because the 'update_network_options'
