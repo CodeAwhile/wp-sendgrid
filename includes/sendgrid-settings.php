@@ -30,6 +30,7 @@ class WP_SendGrid_Settings {
 		add_action( 'wp_ajax_wp_sendgrid_check_settings', array( __CLASS__, 'ajax_check_settings' ) );
 
 		// This action will be triggered when the user submits the network admin SG settings form.
+		//  Based on: http://wordpress.stackexchange.com/questions/64968/settings-api-in-multisite-missing-update-message
 		add_action( 'network_admin_edit_update_sendgrid_network_options', array(__CLASS__, 'update_network_options'));
 	}
 
@@ -62,8 +63,8 @@ class WP_SendGrid_Settings {
 
 	public static function register_menu() {
 		// Check to be sure the network settings allow for individual site override, before adding option page
-		$net_settings = self::get_network_settings();
-		if ( $net_settings['override'] ) {
+		$network_settings = self::get_network_settings();
+		if ( $network_settings['override'] ) {
 			add_options_page( __( 'SendGrid Settings' ), __( 'SendGrid Settings' ),
 				'manage_options', self::SETTINGS_PAGE_SLUG, array( __CLASS__, 'show_settings_page' ) );
 		}
@@ -93,8 +94,32 @@ class WP_SendGrid_Settings {
 	}
 
 	public static function show_settings_page() {
-		// Compose the url to post the form to.
-		$url = ( !self::is_network_admin_page() ) ?  admin_url( 'options.php' ) : add_query_arg( 'action', 'update_sendgrid_network_options', network_admin_url('edit.php'));
+		if ( self::is_network_admin_page() ) {
+			// Compose the network admin url to post to.
+			$url = add_query_arg( 'action', 'update_sendgrid_network_options', network_admin_url('edit.php'));
+
+			if ( isset( $_REQUEST['settings-updated'] ) ) {
+				// If the request contains a 'settings-updated' parameter, we know we just saved the settings
+				// and need to display an 'updated' message along with the 'test' button.
+				// We can't call 'validate_settings' then 'settings_errors' because the 'update_network_options'
+				// call happens outside of the normal sttings API (we had to create a custom method to handle
+				// saving the network admin settings)
+				?>
+				<div id='setting-error-wp_sendgrid_settings_updated' class='updated settings-error'>
+					<p>
+						<strong><?php _e( 'SendGrid options updated' ); ?> 
+							<input type="button" class="button" id="wp-sendgrid-test-settings" value="<?php echo esc_attr( __( 'Send Test Email' ) ); ?>" />
+							<span class="spinner"></span>
+							<span id="wp-sendgrid-test-settings-response"></span>
+						</strong>
+					</p>
+				</div>
+				<?php
+			}
+		} else {
+			// Use the regular admin options url.
+			$url = admin_url( 'options.php' );
+		}
 		?>
 		<div class="wrap">
 			<h2><?php _e( 'WP SendGrid Settings' ); ?></h2>
@@ -184,6 +209,9 @@ class WP_SendGrid_Settings {
 		if ( $settings['override'] && !self::is_network_admin_page() ) {
 			// Since the network options are undefined (or overrideable) get the normal settings.
 			$settings = get_option( self::SETTINGS_OPTION_NAME, $settings );
+			// Since unchecking checkboxes may remove keys from the option array, merge with the
+			// default settings to ensure all keys are defined.
+			$settings = array_merge( self::$default_settings, $settings );
 		}
 		
 		self::$settings = apply_filters( 'wp_sendgrid_get_settings', $settings );
@@ -192,7 +220,7 @@ class WP_SendGrid_Settings {
 
 	private static function get_network_settings() {
 		$settings = get_site_option( self::SETTINGS_NETWORK_OPTION_NAME, array());
-		return array_merge(self::get_default_network_settings(), $settings);
+		return array_merge( self::get_default_network_settings(), $settings );
 	}
 
 	private static function is_network_admin_page() {
@@ -207,15 +235,12 @@ class WP_SendGrid_Settings {
 		
 			// Since a false value from the override checkbox won't be saved, we need to add it here.
 			$_REQUEST[self::SETTINGS_OPTION_NAME]['override'] = isset( $_REQUEST[self::SETTINGS_OPTION_NAME]['override'] );
-			
-			// Validate settings
-			self::validate_settings( $_REQUEST[self::SETTINGS_OPTION_NAME] );
-			
 			// Update the network option.
 			update_site_option( self::SETTINGS_NETWORK_OPTION_NAME, $_REQUEST[self::SETTINGS_OPTION_NAME] );
 		
 			// Redirect back to the network settings page.
-			wp_redirect( add_query_arg( 'page', self::SETTINGS_PAGE_SLUG, network_admin_url('settings.php') ) );
+			$params = array( 'page' => self::SETTINGS_PAGE_SLUG, 'settings-updated' => 'true' );
+			wp_redirect( add_query_arg( $params, network_admin_url('settings.php') ) );
 			exit();
 		}
 	}
