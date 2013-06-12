@@ -1,31 +1,49 @@
 WP SendGrid
 ===========
-* Contributors: itsananderson, Zer0Divisor
+* Contributors: [itsananderson](http://profiles.wordpress.org/itsananderson),
+  [Zer0Divisor](http://profiles.wordpress.org/Zer0Divisor)
 * Tags: [email](http://wordpress.org/extend/plugins/tags/email)
 * Requires at least: 3.0
 * Tested up to: 3.5.1
-* Stable tag: 2.0.1
+* Stable tag: 2.1.0
 
-Extends the wp_mail() function to use the SendGrid API to send emails
+WP SendGrid routes all emails through SendGrid to improve deliverability
 
 Description
 -----------
 
-WordPress relies on email for various notifications, such as new user messages and comments. Many plugins also use email to notify blog owners about various events. For anyone who develops in Windows, this is frustrating, because PHP can't send emails by default.
+By sending all emails through SendGrid, you can help them end up in an inbox, not a spam folder.
+SendGrid provides a high-deliverability email service, protecting your emails from overzealous spam filters.
+WP SendGrid uses SendGrid's API to make sure your site's emails are delivered.
+This helps ensure reliability for plugins that notify subscribers of new posts, verify new user emails, and perform other email-based tasks.
 
-SendGrid is a service that lets you send emails through an API (among other things). WP SendGrid is a plugin that extends WordPress' wp_mail() function so that it sends emails through SendGrid's API. If you develop on Windows (or any other environment where you have trouble sending emails with WordPress), you're going to love WP SendGrid.
+If you do WordPress development on Windows, or are hosting your site on Windows Azure, this plugin is also an easy way to test email functionality.
+Because Windows doesn't have a built-in sendmail service, WordPress can't send emails by default.
+Since WP SendGrid routes all emails through the SendGrid API, they will be delivered, even if you're running on Windows.
 
 To install, enable WP SendGrid like you would any other WordPress plugin. Enter your SendGrid credentials (you'll need a SendGrid account), and you should be ready to go. If you wish, you can also choose between SendGrid's REST API and their SMTP servers, and whether to connect to SendGrid using a secure connection.
 
 Installation
 ------------
 
+To manually upload WP SendGrid files to your site:
+
 1. Upload the WP SendGrid to the /wp-contents/plugins/ folder.
-1. Activate the plugin from the 'Plugins' menu in WordPress.
-1. Configure WP SendGrid with your SendGrid API credentials.
+1. Activate the plugin from the "Plugins" menu in WordPress.
+1. Navigate to "Settings" &rarr; "SendGrid Settings" and enter your SendGrid API credentials
+
+Or to install from the WordPress admin:
+
+1. Navigate to "Plugins" &rarr; "Install Plugins"
+1. Search for "WP SendGrid" and click "Install Now" for the "WP SendGrid" plugin listing
+1. Activate the plugin from the "Plugins" menu in WordPress, or from the plugin installation screen.
+1. Navigate to "Settings" &rarr; "SendGrid Settings" and enter your SendGrid API credentials
 
 Changelog
 ---------
+
+#### 2.1.0 ####
+* Added support for network-level settings in Multisite
 
 #### 2.0.1 ####
 * Fix a typo in wp_mail function definition
