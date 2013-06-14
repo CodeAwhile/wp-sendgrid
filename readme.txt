@@ -30,7 +30,7 @@ To manually upload WP SendGrid files to your site:
 
 Or to install from the WordPress admin:
 
-1. Navigate to "Plugins" &rarr; "Install Plugins"
+1. Navigate to "Plugins" &rarr; "Add New"
 1. Search for "WP SendGrid" and click "Install Now" for the "WP SendGrid" plugin listing
 1. Activate the plugin from the "Plugins" menu in WordPress, or from the plugin installation screen.
 1. Navigate to "Settings" &rarr; "SendGrid Settings" and enter your SendGrid API credentials
