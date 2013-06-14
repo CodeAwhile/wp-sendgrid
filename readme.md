@@ -17,7 +17,7 @@ SendGrid provides a high-deliverability email service, protecting your emails fr
 WP SendGrid uses SendGrid's API to make sure your site's emails are delivered.
 This helps ensure reliability for plugins that notify subscribers of new posts, verify new user emails, and perform other email-based tasks.
 
-If you do WordPress development on Windows, or are hosting your site on Windows Azure, this plugin is also an easy way to test email functionality.
+If you do WordPress development on Windows, or are hosting your site on Windows Azure, this plugin is an easy way to make sure your emails can be delivered.
 Because Windows doesn't have a built-in sendmail service, WordPress can't send emails by default.
 Since WP SendGrid routes all emails through the SendGrid API, they will be delivered, even if you're running on Windows.
 
