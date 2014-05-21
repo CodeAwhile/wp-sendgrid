@@ -23,7 +23,7 @@ class WP_SendGrid {
 		add_action( 'plugin_action_links', array( __CLASS__, 'plugin_action_links' ), 10, 2 );
 	}
 
-	function plugin_action_links( $links, $file ) {
+	public static function plugin_action_links( $links, $file ) {
 		if ( $file == plugin_basename( __FILE__ ) ) {
 			$settings_link = '<a href="options-general.php?page=' . WP_SendGrid_Settings::SETTINGS_PAGE_SLUG . '">' . __( 'Settings', 'wp_mail_smtp' ) . '</a>';
 			array_unshift( $links, $settings_link );
