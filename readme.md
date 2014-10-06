@@ -4,7 +4,7 @@ WP SendGrid
   [Zer0Divisor](http://profiles.wordpress.org/Zer0Divisor)
 * Tags: [email](http://wordpress.org/extend/plugins/tags/email)
 * Requires at least: 3.0
-* Tested up to: 3.5.1
+* Tested up to: 4.0.0
 * Stable tag: 2.1.0
 
 WP SendGrid routes all emails through SendGrid to improve deliverability
